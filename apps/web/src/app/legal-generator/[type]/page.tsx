@@ -264,25 +264,25 @@ export default function LegalGeneratorPage() {
     return generators[type as LegalType](formData);
   };
 
-  const document = generateDocument();
+  const generatedDocument = generateDocument();
 
   const handleCopy = async () => {
-    if (!document) return;
-    await navigator.clipboard.writeText(document);
+    if (!generatedDocument) return;
+    await navigator.clipboard.writeText(generatedDocument);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleDownload = () => {
-    if (!document) return;
-    const blob = new Blob([document], { type: "text/plain" });
+    if (!generatedDocument) return;
+    const blob = new Blob([generatedDocument], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = window.document.createElement("a");
     a.href = url;
     a.download = `${type}.txt`;
-    document.body.appendChild(a);
+    window.document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
+    window.document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
@@ -401,24 +401,24 @@ export default function LegalGeneratorPage() {
                   variant="outline"
                   size="sm"
                   onClick={handleCopy}
-                  disabled={!document}
+                  disabled={!generatedDocument}
                 >
                   {copied ? "Copied!" : "Copy to Clipboard"}
                 </Button>
                 <Button
                   size="sm"
                   onClick={handleDownload}
-                  disabled={!document}
+                  disabled={!generatedDocument}
                 >
                   Download as Text
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
-              {document ? (
+              {generatedDocument ? (
                 <div className="border border-gray-200 rounded-lg p-4 bg-gray-50 max-h-[600px] overflow-y-auto">
                   <pre className="font-mono text-sm text-gray-800 whitespace-pre-wrap">
-                    {document}
+                    {generatedDocument}
                   </pre>
                 </div>
               ) : (

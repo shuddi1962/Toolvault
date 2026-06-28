@@ -14,7 +14,7 @@ function simpleMarkdown(md: string): string {
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(/`(.+?)`/g, '<code class="bg-gray-100 px-1 rounded">$1</code>')
     .replace(/^- (.+)$/gm, "<li>$1</li>")
-    .replace(/(<li>.*<\/li>)/s, "<ul>$1</ul>")
+    .replace(/(<li>[\s\S]*?<\/li>)/g, "<ul>$1</ul>")
     .replace(/^\d+\. (.+)$/gm, "<li>$1</li>")
     .replace(/\n{2,}/g, "</p><p>")
     .replace(/\n/g, "<br/>")
