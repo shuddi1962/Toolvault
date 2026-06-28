@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { cn } from "@toolvault/utils";
 import {
   LayoutDashboard,
@@ -19,9 +20,11 @@ import {
   Wrench,
   Music,
   Video,
-  ChevronDown,
+  Shield,
 } from "lucide-react";
 import { Button } from "@toolvault/ui";
+
+const SUPER_ADMIN_EMAILS = ["admin@toolvault.com"];
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -47,6 +50,27 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [userPlan, setUserPlan] = useState("free");
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        setUserName(user.user_metadata?.full_name ?? user.email ?? "");
+        setIsAdmin(SUPER_ADMIN_EMAILS.includes(user.email ?? ""));
+        supabase
+          .from("profiles")
+          .select("plan")
+          .eq("id", user.id)
+          .single()
+          .then(({ data }) => {
+            if (data) setUserPlan(data.plan);
+          });
+      }
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -82,6 +106,21 @@ export default function DashboardLayout({
                 {item.name}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className={cn(
+                  "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  pathname.startsWith("/admin")
+                    ? "bg-red-50 text-red-600"
+                    : "text-red-600 hover:bg-red-50"
+                )}
+                onClick={() => setSidebarOpen(false)}
+              >
+                <Shield className="h-5 w-5" />
+                Admin Panel
+              </Link>
+            )}
           </nav>
           <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
             <div className="space-y-1">
@@ -132,6 +171,20 @@ export default function DashboardLayout({
                   {item.name}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                    pathname.startsWith("/admin")
+                      ? "bg-red-50 text-red-600"
+                      : "text-red-600 hover:bg-red-50"
+                  )}
+                >
+                  <Shield className="h-5 w-5" />
+                  Admin Panel
+                </Link>
+              )}
             </nav>
             <div className="mt-8">
               <p className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
@@ -174,10 +227,12 @@ export default function DashboardLayout({
           </button>
           <div className="flex-1" />
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-500">Free Plan</span>
-            <Button size="sm" asChild>
-              <Link href="/pricing">Upgrade</Link>
-            </Button>
+            <span className="text-sm text-gray-500 capitalize">{userPlan} Plan</span>
+            {userPlan === "free" && (
+              <Button size="sm" asChild>
+                <Link href="/pricing">Upgrade</Link>
+              </Button>
+            )}
           </div>
         </div>
         <main className="p-4 lg:p-8">{children}</main>
