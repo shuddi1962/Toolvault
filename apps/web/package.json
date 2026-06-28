@@ -9,6 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@toolvault/ui": "*",
+    "@toolvault/utils": "*",
+    "@toolvault/types": "*",
     "@anthropic-ai/sdk": "^0.106.0",
     "@hookform/resolvers": "^5.4.0",
     "@stripe/stripe-js": "^9.8.0",
@@ -29,7 +32,7 @@
     "sharp": "^0.35.2",
     "stripe": "^22.3.0",
     "tailwind-merge": "^3.6.0",
-    "zod": "^4.4.3",
+    "zod": "^3.23.0",
     "zustand": "^5.0.14"
   },
   "devDependencies": {

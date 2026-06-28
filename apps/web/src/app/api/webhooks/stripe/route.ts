@@ -2,13 +2,14 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { createClient } from "@/lib/supabase/server";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2024-12-18.acacia",
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!);
+}
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(request: Request) {
+  const stripe = getStripe();
   const body = await request.text();
   const sig = request.headers.get("stripe-signature")!;
 
@@ -64,25 +65,7 @@ export async function POST(request: Request) {
 
     case "invoice.payment_succeeded": {
       const invoice = event.data.object as Stripe.Invoice;
-      const subscriptionId = invoice.subscription as string;
-
-      if (subscriptionId) {
-        const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-        const userId = subscription.metadata?.userId;
-
-        if (userId) {
-          await supabase.from("operations").insert({
-            user_id: userId,
-            module: "billing",
-            tool: "payment",
-            status: "completed",
-            metadata: {
-              amount: invoice.amount_paid,
-              currency: invoice.currency,
-            },
-          });
-        }
-      }
+      console.log("Invoice payment succeeded:", invoice.id);
       break;
     }
   }
