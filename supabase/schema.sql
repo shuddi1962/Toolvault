@@ -17,7 +17,7 @@ CREATE TABLE profiles (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
-CREATE POLICY 'Own profile' ON profiles
+CREATE POLICY "Own profile" ON profiles
   FOR ALL USING (auth.uid() = id);
 
 -- FILES (cloud storage per user)
@@ -35,7 +35,7 @@ CREATE TABLE files (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE files ENABLE ROW LEVEL SECURITY;
-CREATE POLICY 'Own files' ON files
+CREATE POLICY "Own files" ON files
   FOR ALL USING (auth.uid() = user_id);
 
 -- OPERATIONS LOG
@@ -51,7 +51,7 @@ CREATE TABLE operations (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE operations ENABLE ROW LEVEL SECURITY;
-CREATE POLICY 'Own operations' ON operations
+CREATE POLICY "Own operations" ON operations
   FOR ALL USING (auth.uid() = user_id);
 
 -- LEGAL POLICIES
@@ -67,7 +67,7 @@ CREATE TABLE legal_policies (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE legal_policies ENABLE ROW LEVEL SECURITY;
-CREATE POLICY 'Own policies' ON legal_policies
+CREATE POLICY "Own policies" ON legal_policies
   FOR ALL USING (auth.uid() = user_id);
 
 -- SAVED MUSIC TRACKS
@@ -80,7 +80,7 @@ CREATE TABLE saved_tracks (
   saved_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE saved_tracks ENABLE ROW LEVEL SECURITY;
-CREATE POLICY 'Own tracks' ON saved_tracks
+CREATE POLICY "Own tracks" ON saved_tracks
   FOR ALL USING (auth.uid() = user_id);
 
 -- VIDEO WATCH HISTORY
@@ -92,7 +92,7 @@ CREATE TABLE watch_history (
   watched_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE watch_history ENABLE ROW LEVEL SECURITY;
-CREATE POLICY 'Own history' ON watch_history
+CREATE POLICY "Own history" ON watch_history
   FOR ALL USING (auth.uid() = user_id);
 
 -- TEAM MEMBERS (Business plan)
@@ -104,7 +104,7 @@ CREATE TABLE team_members (
   invited_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE team_members ENABLE ROW LEVEL SECURITY;
-CREATE POLICY 'Team access' ON team_members
+CREATE POLICY "Team access" ON team_members
   FOR ALL USING (auth.uid() = owner_id OR auth.uid() = member_id);
 
 -- API KEYS (Business plan)
@@ -117,7 +117,7 @@ CREATE TABLE api_keys (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE api_keys ENABLE ROW LEVEL SECURITY;
-CREATE POLICY 'Own keys' ON api_keys
+CREATE POLICY "Own keys" ON api_keys
   FOR ALL USING (auth.uid() = user_id);
 
 -- COSTS (API usage tracking)
@@ -130,7 +130,7 @@ CREATE TABLE costs (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 ALTER TABLE costs ENABLE ROW LEVEL SECURITY;
-CREATE POLICY 'Own costs' ON costs
+CREATE POLICY "Own costs" ON costs
   FOR ALL USING (auth.uid() = user_id);
 
 -- Trigger to create profile on signup
