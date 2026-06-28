@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
   --background: #f9fafb;
   --foreground: #374151;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a;
-    --foreground: #f9fafb;
-  }
+.dark {
+  --background: #0f172a;
+  --foreground: #f9fafb;
 }
 
 body {
@@ -25,4 +25,31 @@ body {
   body {
     @apply bg-gray-50 text-gray-900 antialiased;
   }
+}
+
+.dark body {
+  @apply bg-gray-900 text-gray-100;
+}
+
+.dark * {
+  @apply border-gray-700;
+}
+
+/* Floating particles animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.3; }
+  50% { transform: translateY(-20px) translateX(10px); opacity: 0.6; }
+}
+
+@keyframes float-delay {
+  0%, 100% { transform: translateY(0) translateX(0); opacity: 0.2; }
+  50% { transform: translateY(-15px) translateX(-10px); opacity: 0.5; }
+}
+
+.particle {
+  animation: float 6s ease-in-out infinite;
+}
+
+.particle-delay {
+  animation: float-delay 8s ease-in-out infinite;
 }

@@ -51,8 +51,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta name="theme-color" content="#6366f1" />
+      </head>
+      <body className={`${inter.className} antialiased`}>{children}</body>
     </html>
   );
 }
